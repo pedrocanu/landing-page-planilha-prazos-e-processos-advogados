@@ -7,6 +7,7 @@ para advogados autônomos e pequenos escritórios controlarem prazos processuais
 ## Arquivos
 
 - [index.html](index.html) — a landing page completa (HTML + CSS + JS inline, sem dependências externas além das fontes do Google Fonts).
+- [assets/](assets/) — os 3 prints reais da planilha (`painel.png`, `processos.png`, `prazos.png`) usados como prova visual na página.
 
 ## Antes de publicar — troque estas variáveis
 
@@ -31,31 +32,38 @@ a partir de `CHECKOUT_URL`.
 
 ## Rodar localmente
 
-É um HTML estático — basta abrir o arquivo direto no navegador, ou servir com
-qualquer servidor simples:
+É um HTML estático — a forma mais simples é abrir [index.html](index.html) direto
+no navegador (duplo clique). Para servir por `http://localhost`, use o que tiver
+instalado:
 
 ```bash
+# com Python
 python -m http.server 8000
-# depois abra http://localhost:8000
+
+# ou com Node.js
+npx serve .
+```
+
+## Subir para o GitHub
+
+Este repositório já está inicializado e com todos os commits prontos na branch
+`main`. Falta só criar o repositório vazio no GitHub e apontar para ele:
+
+```bash
+git remote add origin https://github.com/<seu-usuario>/<seu-repo>.git
+git push -u origin main
 ```
 
 ## Publicar no GitHub Pages
 
-1. Suba este repositório para o GitHub (veja abaixo).
-2. Em **Settings → Pages**, selecione a branch `main` e a pasta raiz (`/`).
+1. Depois do push, vá em **Settings → Pages** no repositório.
+2. Em "Source", selecione a branch `main` e a pasta raiz (`/`).
 3. A página fica disponível em `https://<seu-usuario>.github.io/<repo>/`.
-
-```bash
-git remote add origin https://github.com/<seu-usuario>/<seu-repo>.git
-git branch -M main
-git push -u origin main
-```
 
 ## Decisões de design
 
-Identidade visual minimalista clara — fundo cinza-claro/off-white, tipografia
-Inter, botões pill pretos, cards com borda fina e os "prints" da planilha
-recriados como mockups em tema escuro (estilo app/SaaS) em vez de imagens
-estáticas. As abas Painel/Processos/Prazos do hero são clicáveis de verdade —
-inclusive com a lógica de cores VENCIDO/HOJE/ESTA SEMANA/OK idêntica à da
-planilha real, que é a melhor prova visual do produto.
+Identidade visual minimalista clara: fundo cinza-claro/off-white, tipografia
+Inter, botões pill pretos, cards com borda fina. A prova visual do produto são
+os 3 prints reais em [assets/](assets/) (não mockups recriados) — no hero eles
+aparecem num seletor de abas clicável (Painel/Processos/Prazos), e reaparecem
+nas seções "Como funciona" e "Todos os processos, num lugar só".
