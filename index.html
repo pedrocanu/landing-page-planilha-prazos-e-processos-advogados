@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Processos e Prazos — planilha para advogados</title>
-<meta name="description" content="Planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo está OK, HOJE, ESTA SEMANA ou VENCIDO — e pinta a linha inteira. Pagamento único, sem mensalidade.">
+<title>Controle de Processos e Prazos: planilha para advogados</title>
+<meta name="description" content="Planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo está OK, HOJE, ESTA SEMANA ou VENCIDO, e pinta a linha inteira. Pagamento único, sem mensalidade.">
 
 <!-- ============================================================
-     VARIÁVEIS FÁCEIS DE TROCAR — mexa só aqui
+     VARIÁVEIS FÁCEIS DE TROCAR: mexa só aqui
      ============================================================ -->
 <script>
   window.CHECKOUT_URL = "https://pay.kiwify.com.br/Uxjv9X5";
@@ -89,7 +89,6 @@ fbq('track', 'PageView');
   .site-nav{position:sticky;top:0;z-index:50;background:rgba(247,247,244,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
   .site-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
   .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;text-decoration:none;letter-spacing:-0.01em;}
-  .brand .mark{width:24px;height:24px;border-radius:7px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex:none;}
   .brand span{white-space:nowrap;}
   .nav-right{display:flex;align-items:center;gap:14px;}
   .nav-right .old{text-decoration:line-through;color:var(--muted);font-size:13px;display:none;}
@@ -262,17 +261,6 @@ fbq('track', 'PageView');
   .compare-card.hi .compare-total{border-top:1px solid var(--dark-border);color:#fff;}
   .compare-total .amt{font-family:'IBM Plex Mono',monospace;font-size:20px;}
 
-  /* ---- role cards (replaces fake testimonials) ---- */
-  .roles{background:var(--dark);color:#fff;}
-  .roles .section-head h2{color:#fff;}
-  .roles .section-head p{color:var(--dark-muted);}
-  .role-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--dark-border);border:1px solid var(--dark-border);border-radius:var(--radius);overflow:hidden;margin-top:8px;}
-  @media(min-width:760px){.role-grid{grid-template-columns:repeat(2,1fr);}}
-  .role-card{background:var(--dark);padding:24px 22px;display:flex;gap:14px;}
-  .role-tag{width:38px;height:38px;border-radius:9px;background:var(--dark-3);border:1px solid var(--dark-border);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--dark-muted);flex:none;}
-  .role-card h3{font-size:14.5px;font-weight:600;color:#fff;}
-  .role-card p{margin:5px 0 0;font-size:13.5px;color:var(--dark-muted);}
-
   /* ---- stat block ---- */
   .stat-block{text-align:center;}
   .stat-block .num{font-family:'IBM Plex Mono',monospace;font-size:clamp(3rem,10vw,5.2rem);font-weight:600;letter-spacing:-0.02em;}
@@ -313,7 +301,6 @@ fbq('track', 'PageView');
 <nav class="site-nav">
   <div class="wrap">
     <a href="#topo" class="brand">
-      <span class="mark">CP</span>
       <span>Controle de Processos e Prazos</span>
     </a>
     <div class="nav-right">
@@ -327,7 +314,7 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="eyebrow center">Planilha para advogados</div>
     <h1>Prazo perdido não avisa.<br>Essa planilha avisa.</h1>
-    <p class="lede">Uma planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo está OK, HOJE, ESTA SEMANA ou VENCIDO — e pinta a linha inteira pra você ver de longe.</p>
+    <p class="lede">Uma planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo está OK, HOJE, ESTA SEMANA ou VENCIDO, e pinta a linha inteira pra você ver de longe.</p>
     <div class="cta-row">
       <a href="#" class="pill pill-dark pill-lg btn-buy-link" id="checkout-btn">
         Quero a planilha <span class="arrow">→</span>
@@ -392,7 +379,7 @@ fbq('track', 'PageView');
                 <tr class="st-hoje"><td>Comércio Bela Vista</td><td>Réplica</td><td class="mono">hoje</td><td>0</td><td><span class="status-pill">HOJE</span></td></tr>
                 <tr class="st-semana"><td>Marina Alvarenga</td><td>Audiência</td><td class="mono">14/09</td><td>3</td><td><span class="status-pill">ESTA SEMANA</span></td></tr>
                 <tr class="st-ok"><td>Marina Alvarenga</td><td>Recurso</td><td class="mono">30/10</td><td>34</td><td><span class="status-pill">OK</span></td></tr>
-                <tr class="st-cumprido"><td>João Petrucci</td><td>Manifestação</td><td class="mono">—</td><td>—</td><td><span class="status-pill">CUMPRIDO</span></td></tr>
+                <tr class="st-cumprido"><td>João Petrucci</td><td>Manifestação</td><td class="mono">-</td><td>-</td><td><span class="status-pill">CUMPRIDO</span></td></tr>
               </tbody>
             </table>
             </div>
@@ -417,7 +404,7 @@ fbq('track', 'PageView');
       </div>
       <div class="card dor-card reveal">
         <span class="n">02</span>
-        <p>Você fez uma planilha do zero, empolgado. Três meses depois ninguém mais atualiza — <strong>porque ela não calcula nada sozinha.</strong></p>
+        <p>Você fez uma planilha do zero, empolgado. Três meses depois ninguém mais atualiza, <strong>porque ela não calcula nada sozinha.</strong></p>
       </div>
       <div class="card dor-card reveal">
         <span class="n">03</span>
@@ -477,10 +464,10 @@ fbq('track', 'PageView');
       <div class="showcase-text">
         <div class="eyebrow">Como funciona</div>
         <h2>Escolha o processo. O resto preenche sozinho.</h2>
-        <p>Na aba Prazos você seleciona o processo numa lista suspensa — cliente e nº do CNJ vêm automáticos. Você só digita o tipo de prazo e a data.</p>
+        <p>Na aba Prazos você seleciona o processo numa lista suspensa. Cliente e nº do CNJ vêm automáticos, você só digita o tipo de prazo e a data.</p>
         <div class="rule-list">
           <div class="rule-item"><span class="dot" style="background:var(--st-vencido-line)"></span><div><b>VENCIDO</b><span>A data já passou e ninguém deu baixa.</span></div></div>
-          <div class="rule-item"><span class="dot" style="background:var(--st-hoje-line)"></span><div><b>HOJE</b><span>O prazo vence hoje — primeira coisa que você olha de manhã.</span></div></div>
+          <div class="rule-item"><span class="dot" style="background:var(--st-hoje-line)"></span><div><b>HOJE</b><span>O prazo vence hoje: primeira coisa que você olha de manhã.</span></div></div>
           <div class="rule-item"><span class="dot" style="background:var(--st-semana-line)"></span><div><b>ESTA SEMANA</b><span>Vence nos próximos 7 dias, já entrou no radar.</span></div></div>
           <div class="rule-item"><span class="dot" style="background:var(--st-ok-line)"></span><div><b>OK</b><span>Ainda tem tempo de sobra.</span></div></div>
         </div>
@@ -517,15 +504,15 @@ fbq('track', 'PageView');
     <div class="mini-row reveal">
       <div class="mini-chip">
         <div class="top"><span class="day mono">30 dias antes</span></div>
-        <div class="row" style="background:var(--st-ok-bg);color:var(--st-ok-fg);"><span>Recurso — Marina A.</span><span class="status-pill">OK</span></div>
+        <div class="row" style="background:var(--st-ok-bg);color:var(--st-ok-fg);"><span>Recurso · Marina A.</span><span class="status-pill">OK</span></div>
       </div>
       <div class="mini-chip">
         <div class="top"><span class="day mono">3 dias antes</span></div>
-        <div class="row" style="background:var(--st-semana-bg);color:var(--st-semana-fg);"><span>Recurso — Marina A.</span><span class="status-pill">ESTA SEMANA</span></div>
+        <div class="row" style="background:var(--st-semana-bg);color:var(--st-semana-fg);"><span>Recurso · Marina A.</span><span class="status-pill">ESTA SEMANA</span></div>
       </div>
       <div class="mini-chip">
         <div class="top"><span class="day mono">venceu ontem</span></div>
-        <div class="row" style="background:var(--st-vencido-bg);color:var(--st-vencido-fg);"><span>Recurso — Marina A.</span><span class="status-pill">VENCIDO</span></div>
+        <div class="row" style="background:var(--st-vencido-bg);color:var(--st-vencido-fg);"><span>Recurso · Marina A.</span><span class="status-pill">VENCIDO</span></div>
       </div>
     </div>
   </div>
@@ -555,9 +542,9 @@ fbq('track', 'PageView');
             <table>
               <thead><tr><th>Registro</th><th>Cliente</th><th>Nº Processo (CNJ)</th><th>Fase</th><th>Comarca / Vara</th><th>Status</th></tr></thead>
               <tbody>
-                <tr><td>1</td><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26.01</td><td>Instrução</td><td>1ª Vara Cível — SP</td><td>Ativo</td></tr>
+                <tr><td>1</td><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26.01</td><td>Instrução</td><td>1ª Vara Cível, SP</td><td>Ativo</td></tr>
                 <tr><td>2</td><td>Roberto Dias</td><td class="mono">0007781-12.2023.8.26.03</td><td>Recursal</td><td>2ª Vara do Trabalho</td><td>Ativo</td></tr>
-                <tr><td>3</td><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26.02</td><td>Conhecimento</td><td>3ª Vara Cível — SP</td><td>Suspenso</td></tr>
+                <tr><td>3</td><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26.02</td><td>Conhecimento</td><td>3ª Vara Cível, SP</td><td>Suspenso</td></tr>
               </tbody>
             </table>
             </div>
@@ -567,7 +554,7 @@ fbq('track', 'PageView');
       <div class="showcase-text">
         <div class="eyebrow">Aba Processos</div>
         <h2>Todos os seus processos, num lugar só</h2>
-        <p>Cliente, nº do CNJ, área, fase, comarca/vara, responsável, data de distribuição e status — o cadastro que alimenta o resto da planilha.</p>
+        <p>Cliente, nº do CNJ, área, fase, comarca/vara, responsável, data de distribuição e status. O cadastro que alimenta o resto da planilha.</p>
       </div>
     </div>
   </div>
@@ -639,23 +626,6 @@ fbq('track', 'PageView');
   </div>
 </section>
 
-<section class="section roles">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <div class="eyebrow center on-dark">Pra quem é</div>
-      <h2>Pensado pra quem vive prazo no dia a dia</h2>
-      <p>Não é sistema jurídico completo. É o controle que falta pra quem ainda vive no improviso.</p>
-    </div>
-    <div class="role-grid reveal">
-      <div class="role-card"><div class="role-tag">CV</div><div><h3>Advogado(a) cível autônomo</h3><p>Atua sozinho, sem paralegal — precisa de um aviso que não depende de lembrar.</p></div></div>
-      <div class="role-card"><div class="role-tag">TR</div><div><h3>Advogado(a) trabalhista</h3><p>Muitos processos correndo em paralelo, prazos curtos e recorrentes.</p></div></div>
-      <div class="role-card"><div class="role-tag">ES</div><div><h3>Sócio(a) de escritório pequeno</h3><p>Duas ou três pessoas dividindo processos, sem sistema jurídico integrado.</p></div></div>
-      <div class="role-card"><div class="role-tag">AJ</div><div><h3>Assistente jurídico(a)</h3><p>Cuida da agenda de mais de um advogado e precisa de uma visão única.</p></div></div>
-    </div>
-    <p class="reveal" style="text-align:center;margin-top:28px;color:var(--dark-muted);font-size:14px;">Não é pra quem já usa sistema jurídico completo com peticionamento integrado, nem pra quem procura um app com login e sincronização em nuvem.</p>
-  </div>
-</section>
-
 <section class="section-tight">
   <div class="wrap stat-block reveal">
     <div class="num">R$0<span>/mês</span></div>
@@ -672,19 +642,19 @@ fbq('track', 'PageView');
     <div class="faq-wrap reveal">
       <div class="faq-item">
         <button>Funciona no Google Sheets ou só no Excel?<span class="plus">+</span></button>
-        <div class="a"><p>Funciona nos dois. Você recebe o arquivo em formato compatível — pode abrir direto no Excel ou fazer upload no Google Drive e continuar por lá.</p></div>
+        <div class="a"><p>Funciona nos dois. Você recebe o arquivo em formato compatível: pode abrir direto no Excel ou fazer upload no Google Drive e continuar por lá.</p></div>
       </div>
       <div class="faq-item">
         <button>Preciso saber Excel avançado?<span class="plus">+</span></button>
-        <div class="a"><p>Não. As fórmulas já vêm prontas nas colunas cinza. Você só preenche as células brancas — cliente, processo, data. O cálculo de situação e a cor da linha acontecem sozinhos.</p></div>
+        <div class="a"><p>Não. As fórmulas já vêm prontas nas colunas cinza. Você só preenche as células brancas: cliente, processo, data. O cálculo de situação e a cor da linha acontecem sozinhos.</p></div>
       </div>
       <div class="faq-item">
         <button>Funciona no celular?<span class="plus">+</span></button>
-        <div class="a"><p>Dá pra consultar tranquilamente pelo app do Excel ou do Google Sheets no celular. Para cadastrar processos novos, recomendamos computador — é mais rápido de preencher.</p></div>
+        <div class="a"><p>Dá pra consultar tranquilamente pelo app do Excel ou do Google Sheets no celular. Para cadastrar processos novos, recomendamos computador: é mais rápido de preencher.</p></div>
       </div>
       <div class="faq-item">
         <button>É uma assinatura?<span class="plus">+</span></button>
-        <div class="a"><p>Não. Pagamento único. Sem cobrança recorrente, sem trial que vira mensalidade — o arquivo é seu.</p></div>
+        <div class="a"><p>Não. Pagamento único. Sem cobrança recorrente, sem trial que vira mensalidade: o arquivo é seu.</p></div>
       </div>
       <div class="faq-item">
         <button>Como recebo depois de pagar?<span class="plus">+</span></button>
@@ -725,7 +695,7 @@ fbq('track', 'PageView');
 
 <footer>
   <div class="wrap">
-    <span>Controle de Processos e Prazos — planilha digital. Uso pessoal, não redistribuir.</span>
+    <span>Controle de Processos e Prazos: planilha digital. Uso pessoal, não redistribuir.</span>
     <span>Compra processada via Kiwify.</span>
   </div>
 </footer>
