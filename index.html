@@ -239,6 +239,17 @@ fbq('track', 'PageView');
   .compare-card.hi .compare-total{border-top:1px solid var(--dark-border);color:#fff;}
   .compare-total .amt{font-family:'IBM Plex Mono',monospace;font-size:20px;}
 
+  .price-card{padding:32px 28px;}
+  .price-block{display:flex;flex-direction:column;align-items:flex-start;gap:3px;}
+  .price-block .old{color:var(--dark-muted);text-decoration:line-through;font-size:15px;}
+  .price-block .now{color:#fff;font-size:40px;font-weight:600;line-height:1;}
+  .price-block .tag{color:var(--dark-muted);font-size:12.5px;margin-top:4px;}
+  .price-checklist{margin-top:28px;padding-top:22px;border-top:1px solid var(--dark-border);}
+  .price-checklist .pc-head{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--dark-muted);margin-bottom:14px;}
+  .price-checklist ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+  .price-checklist li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#e7e8ea;line-height:1.4;}
+  .price-checklist li .ok{font-family:'IBM Plex Mono',monospace;color:var(--st-ok-line);font-weight:700;flex:none;}
+
   /* ---- stat block ---- */
   .stat-block{text-align:center;}
   .stat-block .num{font-family:'IBM Plex Mono',monospace;font-size:clamp(3rem,10vw,5.2rem);font-weight:600;letter-spacing:-0.02em;}
@@ -489,12 +500,31 @@ fbq('track', 'PageView');
         <div class="compare-row"><span>Depois de 6 meses</span><span class="amt">R$ 600+</span></div>
         <div class="compare-row"><span>Cancelou, perdeu o acesso</span><span class="amt">sim</span></div>
       </div>
-      <div class="card compare-card hi">
+
+      <div class="card compare-card hi price-card">
         <h3>Controle de Processos e Prazos</h3>
-        <div class="compare-row"><span>Pagamento</span><span class="amt">uma vez só</span></div>
-        <div class="compare-row"><span>Mensalidade</span><span class="amt">R$ 0</span></div>
-        <div class="compare-row"><span>O arquivo é seu</span><span class="amt">para sempre</span></div>
-        <div class="compare-total"><span>Hoje</span><span class="amt" id="compare-now"></span></div>
+
+        <div class="price-block">
+          <span class="old mono" id="price-card-old"></span>
+          <span class="now mono" id="price-card-now"></span>
+          <span class="tag">pagamento único</span>
+        </div>
+
+        <a href="#" class="pill pill-light pill-lg btn-buy-link" id="checkout-btn-preco" style="width:100%;justify-content:center;margin-top:18px;">
+          Quero a planilha <span class="arrow">→</span>
+        </a>
+
+        <div class="price-checklist">
+          <div class="pc-head">O que você recebe</div>
+          <ul>
+            <li><span class="ok">✓</span>As 4 abas prontas: Instruções, Painel, Processos e Prazos</li>
+            <li><span class="ok">✓</span>Fórmulas já configuradas: Situação, Dias Restantes e Painel automático</li>
+            <li><span class="ok">✓</span>Cor automática por linha: verde, amarelo, laranja e vermelho</li>
+            <li><span class="ok">✓</span>Funciona no Excel e no Google Sheets</li>
+            <li><span class="ok">✓</span>Arquivo enviado direto no seu e-mail pela Kiwify</li>
+            <li><span class="ok">✓</span>Sem mensalidade, o arquivo é seu para sempre</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -588,11 +618,11 @@ fbq('track', 'PageView');
 
     var now = window.PRICE_DISPLAY || '';
     var old = window.PRICE_OLD_DISPLAY || '';
-    ['hero-now','compare-now'].forEach(function(id){
+    ['hero-now','price-card-now'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.textContent = now;
     });
-    ['hero-old','nav-old'].forEach(function(id){
+    ['hero-old','nav-old','price-card-old'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.textContent = old;
     });
