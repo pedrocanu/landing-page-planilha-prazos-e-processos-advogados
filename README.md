@@ -17,13 +17,14 @@ Tudo o que precisa de ajuste fica no topo do `<head>` de [index.html](index.html
 window.CHECKOUT_URL = "https://pay.kiwify.com.br/Uxjv9X5"; // link real da Kiwify (já preenchido)
 window.PRICE_DISPLAY = "R$ 19,90";   // preço exibido
 window.PRICE_OLD_DISPLAY = "R$ 37";  // preço "de" (âncora), opcional
-window.FB_PIXEL_ID = "1048049571165967"; // ID do Meta Pixel (já preenchido)
 ```
 
-O Pixel do Meta (Facebook Ads) já está configurado com o ID real (`1048049571165967`),
-disparando `PageView` no carregamento e `InitiateCheckout` ao clicar em qualquer botão
-de compra. Se um dia precisar trocar de pixel, o ID aparece em **dois** lugares no
-arquivo: na variável `window.FB_PIXEL_ID` e no `<noscript>` logo abaixo — troque nos
+Logo abaixo fica o **Meta Pixel Code** (código oficial gerado pelo Gerenciador de
+Eventos do Facebook), já com o ID real `1048049571165967` disparando `PageView` no
+carregamento. Todos os botões de compra também disparam `InitiateCheckout` ao serem
+clicados (isso é feito à parte, no script do final do arquivo). Se um dia precisar
+trocar de pixel, o ID aparece em **dois** lugares dentro do bloco `<!-- Meta Pixel
+Code -->`: na chamada `fbq('init', ...)` e no `<noscript>` logo abaixo — troque nos
 dois.
 
 O botão principal de compra tem `id="checkout-btn"`; todos os botões de compra
