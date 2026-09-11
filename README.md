@@ -14,15 +14,14 @@ Tudo o que precisa de ajuste fica no topo do `<head>` de [index.html](index.html
 
 ```js
 window.CHECKOUT_URL = "https://pay.kiwify.com.br/Uxjv9X5"; // link real da Kiwify (já preenchido)
-window.PRICE_DISPLAY = "R$ 27";      // preço exibido
-window.PRICE_OLD_DISPLAY = "R$ 47";  // preço "de" (âncora), opcional
-window.FB_PIXEL_ID = "SEU_PIXEL_ID_AQUI"; // ID do Meta Pixel — troque pelo seu
+window.PRICE_DISPLAY = "R$ 19,90";   // preço exibido
+window.PRICE_OLD_DISPLAY = "R$ 37";  // preço "de" (âncora), opcional
+window.FB_PIXEL_ID = "1048049571165967"; // ID do Meta Pixel (já preenchido)
 ```
 
-O Pixel do Meta (Facebook Ads) está com o código base pronto (`PageView` +
-`InitiateCheckout` disparado ao clicar em qualquer botão de compra), mas só funciona
-de verdade depois que você substituir `SEU_PIXEL_ID_AQUI` pelo ID numérico do seu
-pixel (Gerenciador de Eventos → seu Pixel → ID). Ele aparece em **dois** lugares no
+O Pixel do Meta (Facebook Ads) já está configurado com o ID real (`1048049571165967`),
+disparando `PageView` no carregamento e `InitiateCheckout` ao clicar em qualquer botão
+de compra. Se um dia precisar trocar de pixel, o ID aparece em **dois** lugares no
 arquivo: na variável `window.FB_PIXEL_ID` e no `<noscript>` logo abaixo — troque nos
 dois.
 
@@ -54,10 +53,9 @@ git push -u origin main
 
 ## Decisões de design
 
-Identidade visual sóbria/editorial — preto, branco e creme, tipografia serifada
-(Fraunces) para títulos e monoespaçada (IBM Plex Mono) para números de processo e
-preços, remetendo a papelada de cartório/autos processuais. As "capturas de tela"
-da planilha (Painel, Processos, Prazos) são recriadas em HTML/CSS — inclusive com
-abas clicáveis — em vez de imagens estáticas, para carregar rápido, funcionar em
-qualquer resolução e servir como prova real do produto (a lógica de cores
-VENCIDO/HOJE/ESTA SEMANA/OK é a mesma da planilha de verdade).
+Identidade visual minimalista clara — fundo cinza-claro/off-white, tipografia
+Inter, botões pill pretos, cards com borda fina e os "prints" da planilha
+recriados como mockups em tema escuro (estilo app/SaaS) em vez de imagens
+estáticas. As abas Painel/Processos/Prazos do hero são clicáveis de verdade —
+inclusive com a lógica de cores VENCIDO/HOJE/ESTA SEMANA/OK idêntica à da
+planilha real, que é a melhor prova visual do produto.
