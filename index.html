@@ -135,43 +135,24 @@ fbq('track', 'PageView');
   .hero .price-line .now{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;}
 
   .hero-shot{margin:52px 0 0;padding:0 16px 0;}
-  .hero-shot-inner{max-width:1000px;margin:0 auto;}
+  .hero-shot-inner{max-width:1000px;margin:0 auto;text-align:center;}
 
-  /* ================= SHEET MOCKUP (dark, product demo) ================= */
-  .sheet-frame{
-    background:var(--dark);border:1px solid var(--dark-border);border-radius:16px;
-    overflow:hidden;box-shadow:0 30px 70px -30px rgba(10,10,10,.45);
+  /* ================= PRODUCT SHOTS (real screenshots) ================= */
+  .shot-switch{
+    display:inline-flex;gap:3px;padding:4px;background:#fff;border:1px solid var(--border);
+    border-radius:100px;margin:0 auto 16px;
   }
-  .sheet-titlebar{display:flex;align-items:center;gap:7px;padding:12px 16px;background:var(--dark-2);border-bottom:1px solid var(--dark-border);}
-  .sheet-titlebar .dot{width:8px;height:8px;border-radius:50%;background:#3c3f45;}
-  .sheet-titlebar span{margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--dark-muted);}
-  .sheet-tabs{display:flex;background:var(--dark-2);border-bottom:1px solid var(--dark-border);}
-  .sheet-tabs button{flex:1;background:none;border:0;color:var(--dark-muted);font-weight:600;font-size:12px;letter-spacing:.03em;padding:13px 6px;cursor:pointer;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;}
-  .sheet-tabs button.active{color:#fff;border-bottom-color:var(--accent);}
-  .sheet-alert{background:rgba(255,255,255,.045);color:#c7c9cd;font-size:12px;padding:9px 16px;border-bottom:1px solid var(--dark-border);}
-  .sheet-body{padding:18px;min-height:280px;}
-  .sheet-scroll{overflow-x:auto;}
-  .sheet-body table{width:100%;border-collapse:collapse;font-size:12px;}
-  .sheet-body th{text-align:left;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--dark-muted);padding:7px 9px;border-bottom:1px solid var(--dark-border);white-space:nowrap;}
-  .sheet-body td{padding:8px 9px;border-bottom:1px solid rgba(255,255,255,.055);white-space:nowrap;color:var(--dark-text);}
-  tr.st-vencido td{background:var(--st-vencido-bg);color:var(--st-vencido-fg);}
-  tr.st-hoje td{background:var(--st-hoje-bg);color:var(--st-hoje-fg);}
-  tr.st-semana td{background:var(--st-semana-bg);color:var(--st-semana-fg);}
-  tr.st-ok td{background:var(--st-ok-bg);color:var(--st-ok-fg);}
-  tr.st-cumprido td{background:var(--st-cump-bg);color:var(--st-cump-fg);}
+  .shot-switch button{
+    background:none;border:0;border-radius:100px;padding:8px 16px;cursor:pointer;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;color:var(--muted);
+  }
+  .shot-switch button.active{background:var(--ink);color:#fff;}
+  .shot-frame{
+    background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;
+    box-shadow:0 30px 70px -35px rgba(16,17,19,.22);
+  }
+  .shot-frame img{width:100%;display:block;}
   .status-pill{display:inline-block;padding:2px 8px;border-radius:100px;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.03em;border:1px solid currentColor;}
-
-  .painel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
-  @media(min-width:480px){.painel-grid{grid-template-columns:repeat(4,1fr);}}
-  .painel-card{border:1px solid var(--dark-border);border-radius:var(--radius-sm);padding:13px 12px;background:rgba(255,255,255,.025);}
-  .painel-card .label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--dark-muted);}
-  .painel-card .num{font-family:'IBM Plex Mono',monospace;font-size:25px;font-weight:600;margin-top:5px;color:#fff;}
-  .painel-card.warn .num{color:var(--st-vencido-line);}
-  .painel-card.today .num{color:var(--st-hoje-line);}
-  .painel-card.week .num{color:var(--st-semana-line);}
-  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
-  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dark-muted);font-family:'IBM Plex Mono',monospace;}
-  .legend-dot{width:8px;height:8px;border-radius:2px;flex:none;}
 
   /* ================= CARD (light) ================= */
   .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);}
@@ -189,13 +170,8 @@ fbq('track', 'PageView');
   @media(min-width:640px){.feat-grid{grid-template-columns:repeat(2,1fr);}}
   @media(min-width:980px){.feat-grid{grid-template-columns:repeat(4,1fr);}}
   .feat-card{overflow:hidden;}
-  .feat-card .thumb{background:var(--dark);padding:16px 14px;height:132px;display:flex;flex-direction:column;justify-content:center;gap:6px;}
-  .feat-thumb-line{height:7px;border-radius:3px;background:var(--dark-border);}
-  .feat-thumb-line.w60{width:60%;}
-  .feat-thumb-line.w80{width:80%;}
-  .feat-thumb-line.w40{width:40%;}
-  .feat-thumb-line.accent{background:var(--st-vencido-line);}
-  .feat-thumb-line.accent2{background:var(--st-ok-line);}
+  .feat-card .thumb{height:132px;overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg);}
+  .feat-card .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;}
   .feat-card .txt{padding:18px 18px 20px;}
   .feat-card h3{font-size:15px;font-weight:600;letter-spacing:-0.01em;}
   .feat-card p{margin:6px 0 0;font-size:13.5px;color:var(--muted);}
@@ -233,9 +209,11 @@ fbq('track', 'PageView');
   .device-desktop{border:1px solid var(--dark-border);border-radius:14px 14px 6px 6px;background:var(--dark);overflow:hidden;}
   .device-desktop .bar{background:var(--dark-2);padding:9px 12px;display:flex;gap:6px;border-bottom:1px solid var(--dark-border);}
   .device-desktop .bar .d{width:7px;height:7px;border-radius:50%;background:#3c3f45;}
-  .device-desktop .screen{padding:20px;}
+  .device-desktop .screen{overflow:hidden;}
+  .device-desktop .screen img{width:100%;display:block;}
   .device-phone{border:1px solid var(--dark-border);border-radius:26px;background:var(--dark);padding:10px;max-width:220px;margin:0 auto;}
-  .device-phone .screen{border-radius:18px;background:var(--dark-2);padding:16px 12px;min-height:220px;}
+  .device-phone .screen{border-radius:18px;overflow:hidden;height:260px;}
+  .device-phone .screen img{width:auto;height:100%;max-width:none;}
 
   /* ---- dark CTA ---- */
   .cta-dark{background:var(--dark);color:#fff;text-align:center;}
@@ -329,63 +307,15 @@ fbq('track', 'PageView');
 
   <div class="hero-shot">
     <div class="hero-shot-inner reveal">
-      <div class="sheet-frame">
-        <div class="sheet-titlebar">
-          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span>controle-de-processos-e-prazos.xlsx</span>
-        </div>
-        <div class="sheet-tabs">
-          <button data-tab="painel" class="active">Painel</button>
-          <button data-tab="processos">Processos</button>
-          <button data-tab="prazos">Prazos</button>
-        </div>
-        <div class="sheet-alert">ATENÇÃO: estes números atualizam sozinhos conforme você preenche as outras abas.</div>
-        <div class="sheet-body">
-
-          <div class="pane" data-pane="painel">
-            <div class="painel-grid">
-              <div class="painel-card"><div class="label">Processos ativos</div><div class="num">14</div></div>
-              <div class="painel-card warn"><div class="label">Prazos vencidos</div><div class="num">1</div></div>
-              <div class="painel-card today"><div class="label">Prazos hoje</div><div class="num">2</div></div>
-              <div class="painel-card week"><div class="label">Esta semana</div><div class="num">3</div></div>
-            </div>
-            <div class="legend">
-              <span class="legend-item"><span class="legend-dot" style="background:var(--st-vencido-line)"></span>Vencido</span>
-              <span class="legend-item"><span class="legend-dot" style="background:var(--st-hoje-line)"></span>Hoje</span>
-              <span class="legend-item"><span class="legend-dot" style="background:var(--st-semana-line)"></span>Esta semana</span>
-              <span class="legend-item"><span class="legend-dot" style="background:var(--st-ok-line)"></span>OK</span>
-            </div>
-          </div>
-
-          <div class="pane" data-pane="processos" hidden>
-            <div class="sheet-scroll">
-            <table>
-              <thead><tr><th>Cliente</th><th>Nº Processo</th><th>Área</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26</td><td>Cível</td><td>Ativo</td></tr>
-                <tr><td>Roberto Dias</td><td class="mono">0007781-12.2023.8.26</td><td>Trabalhista</td><td>Ativo</td></tr>
-                <tr><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26</td><td>Cível</td><td>Suspenso</td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
-
-          <div class="pane" data-pane="prazos" hidden>
-            <div class="sheet-scroll">
-            <table>
-              <thead><tr><th>Cliente</th><th>Tipo de prazo</th><th>Data</th><th>Dias</th><th>Situação</th></tr></thead>
-              <tbody>
-                <tr class="st-vencido"><td>Roberto Dias</td><td>Contestação</td><td class="mono">02/09</td><td>-6</td><td><span class="status-pill">VENCIDO</span></td></tr>
-                <tr class="st-hoje"><td>Comércio Bela Vista</td><td>Réplica</td><td class="mono">hoje</td><td>0</td><td><span class="status-pill">HOJE</span></td></tr>
-                <tr class="st-semana"><td>Marina Alvarenga</td><td>Audiência</td><td class="mono">14/09</td><td>3</td><td><span class="status-pill">ESTA SEMANA</span></td></tr>
-                <tr class="st-ok"><td>Marina Alvarenga</td><td>Recurso</td><td class="mono">30/10</td><td>34</td><td><span class="status-pill">OK</span></td></tr>
-                <tr class="st-cumprido"><td>João Petrucci</td><td>Manifestação</td><td class="mono">-</td><td>-</td><td><span class="status-pill">CUMPRIDO</span></td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
-
-        </div>
+      <div class="shot-switch">
+        <button data-tab="painel" class="active">Painel</button>
+        <button data-tab="processos">Processos</button>
+        <button data-tab="prazos">Prazos</button>
+      </div>
+      <div class="shot-frame">
+        <img class="pane" data-pane="painel" src="assets/painel.png" alt="Aba Painel da planilha, com contadores automáticos de processos ativos, prazos vencidos, de hoje e da semana">
+        <img class="pane" data-pane="processos" src="assets/processos.png" alt="Aba Processos da planilha, com cadastro de cliente, nº do processo e status" hidden>
+        <img class="pane" data-pane="prazos" src="assets/prazos.png" alt="Aba Prazos da planilha, com processo escolhido em lista suspensa e situação calculada automaticamente" hidden>
       </div>
     </div>
   </div>
@@ -423,36 +353,19 @@ fbq('track', 'PageView');
     </div>
     <div class="feat-grid">
       <div class="card feat-card reveal">
-        <div class="thumb">
-          <div class="feat-thumb-line w40"></div>
-          <div class="feat-thumb-line w80 accent"></div>
-          <div class="feat-thumb-line w60"></div>
-        </div>
+        <div class="thumb"><img src="assets/painel.png" alt="Aba Painel"></div>
         <div class="txt"><h3>Painel</h3><p>Contadores automáticos: ativos, vencidos, hoje, esta semana.</p></div>
       </div>
       <div class="card feat-card reveal">
-        <div class="thumb">
-          <div class="feat-thumb-line w80"></div>
-          <div class="feat-thumb-line w60"></div>
-          <div class="feat-thumb-line w40"></div>
-        </div>
+        <div class="thumb"><img src="assets/processos.png" alt="Aba Processos"></div>
         <div class="txt"><h3>Processos</h3><p>Cliente, nº do processo (CNJ), área, fase, comarca/vara.</p></div>
       </div>
       <div class="card feat-card reveal">
-        <div class="thumb">
-          <div class="feat-thumb-line w60 accent2"></div>
-          <div class="feat-thumb-line w80"></div>
-          <div class="feat-thumb-line w40 accent"></div>
-        </div>
+        <div class="thumb"><img src="assets/prazos.png" alt="Aba Prazos"></div>
         <div class="txt"><h3>Prazos</h3><p>Situação e cor da linha calculadas sozinhas, dia após dia.</p></div>
       </div>
       <div class="card feat-card reveal">
-        <div class="thumb">
-          <div class="feat-thumb-line w40"></div>
-          <div class="feat-thumb-line w40"></div>
-          <div class="feat-thumb-line w40"></div>
-        </div>
-        <div class="txt"><h3>Instruções</h3><p>Passo a passo de como preencher, sem manual de 40 páginas.</p></div>
+        <div class="txt" style="padding-top:20px;"><h3>Instruções</h3><p>Passo a passo de como preencher, sem manual de 40 páginas.</p></div>
       </div>
     </div>
   </div>
@@ -473,21 +386,8 @@ fbq('track', 'PageView');
         </div>
       </div>
       <div>
-        <div class="sheet-frame">
-          <div class="sheet-titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>aba: prazos</span></div>
-          <div class="sheet-alert">ATENÇÃO: escolha o processo na lista da coluna Processo, o resto preenche sozinho.</div>
-          <div class="sheet-body">
-            <div class="sheet-scroll">
-            <table>
-              <thead><tr><th>Processo</th><th>Cliente (auto)</th><th>Tipo</th><th>Data</th><th>Situação</th></tr></thead>
-              <tbody>
-                <tr class="st-vencido"><td>0007781...</td><td>Roberto Dias</td><td>Contestação</td><td class="mono">02/09</td><td><span class="status-pill">VENCIDO</span></td></tr>
-                <tr class="st-hoje"><td>0003321...</td><td>Comércio B.V.</td><td>Réplica</td><td class="mono">hoje</td><td><span class="status-pill">HOJE</span></td></tr>
-                <tr class="st-semana"><td>0001234...</td><td>Marina A.</td><td>Audiência</td><td class="mono">14/09</td><td><span class="status-pill">ESTA SEMANA</span></td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
+        <div class="shot-frame">
+          <img src="assets/prazos.png" alt="Aba Prazos da planilha, com o processo escolhido em lista suspensa e a coluna Situação calculada automaticamente">
         </div>
       </div>
     </div>
@@ -535,20 +435,8 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="showcase rev reveal">
       <div>
-        <div class="sheet-frame">
-          <div class="sheet-titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>aba: processos</span></div>
-          <div class="sheet-body">
-            <div class="sheet-scroll">
-            <table>
-              <thead><tr><th>Registro</th><th>Cliente</th><th>Nº Processo (CNJ)</th><th>Fase</th><th>Comarca / Vara</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26.01</td><td>Instrução</td><td>1ª Vara Cível, SP</td><td>Ativo</td></tr>
-                <tr><td>2</td><td>Roberto Dias</td><td class="mono">0007781-12.2023.8.26.03</td><td>Recursal</td><td>2ª Vara do Trabalho</td><td>Ativo</td></tr>
-                <tr><td>3</td><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26.02</td><td>Conhecimento</td><td>3ª Vara Cível, SP</td><td>Suspenso</td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
+        <div class="shot-frame">
+          <img src="assets/processos.png" alt="Aba Processos da planilha, com cadastro de cliente, nº do processo, área, fase e status">
         </div>
       </div>
       <div class="showcase-text">
@@ -565,24 +453,10 @@ fbq('track', 'PageView');
     <div class="device-grid reveal">
       <div class="device-desktop">
         <div class="bar"><span class="d"></span><span class="d"></span><span class="d"></span></div>
-        <div class="screen">
-          <div class="painel-grid" style="grid-template-columns:repeat(4,1fr);">
-            <div class="painel-card"><div class="label">Ativos</div><div class="num">14</div></div>
-            <div class="painel-card warn"><div class="label">Vencidos</div><div class="num">1</div></div>
-            <div class="painel-card today"><div class="label">Hoje</div><div class="num">2</div></div>
-            <div class="painel-card week"><div class="label">Semana</div><div class="num">3</div></div>
-          </div>
-        </div>
+        <div class="screen"><img src="assets/painel.png" alt="Aba Painel aberta no computador"></div>
       </div>
       <div class="device-phone">
-        <div class="screen">
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div class="row mono" style="background:var(--st-vencido-bg);color:var(--st-vencido-fg);border-radius:8px;padding:9px 10px;font-size:11px;">VENCIDO</div>
-            <div class="row mono" style="background:var(--st-hoje-bg);color:var(--st-hoje-fg);border-radius:8px;padding:9px 10px;font-size:11px;">HOJE</div>
-            <div class="row mono" style="background:var(--st-semana-bg);color:var(--st-semana-fg);border-radius:8px;padding:9px 10px;font-size:11px;">ESTA SEMANA</div>
-            <div class="row mono" style="background:var(--st-ok-bg);color:var(--st-ok-fg);border-radius:8px;padding:9px 10px;font-size:11px;">OK</div>
-          </div>
-        </div>
+        <div class="screen"><img src="assets/prazos.png" alt="Aba Prazos aberta no celular"></div>
       </div>
     </div>
     <div class="section-head center reveal" style="margin-top:36px;">
@@ -736,7 +610,7 @@ fbq('track', 'PageView');
         });
       });
     }
-    wireTabs('.sheet-tabs button[data-tab]', '.pane[data-pane]', 'data-tab', 'data-pane');
+    wireTabs('.shot-switch button[data-tab]', '.pane[data-pane]', 'data-tab', 'data-pane');
 
     document.querySelectorAll('.faq-item button').forEach(function(btn){
       btn.addEventListener('click', function(){
