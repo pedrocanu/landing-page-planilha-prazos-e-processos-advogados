@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Processos e Prazos — planilha para advogados</title>
+<meta name="description" content="Planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo está OK, HOJE, ESTA SEMANA ou VENCIDO — e pinta a linha inteira. Pagamento único, sem mensalidade.">
+
+<!-- ============================================================
+     VARIÁVEIS FÁCEIS DE TROCAR — mexa só aqui
+     ============================================================ -->
+<script>
+  // 1) Link de checkout da Kiwify
+  window.CHECKOUT_URL = "https://pay.kiwify.com.br/Uxjv9X5";
+
+  // 2) Preço exibido na página (texto livre)
+  window.PRICE_DISPLAY = "R$ 27";
+  window.PRICE_OLD_DISPLAY = "R$ 47";
+
+  // 3) Meta Pixel (Facebook Ads) — troque SEU_PIXEL_ID_AQUI pelo ID numérico
+  //    da sua conta (Gerenciador de Eventos > Pixels). Sem isso, o pixel
+  //    fica "morto" (não erra a página, só não envia nada de verdade).
+  window.FB_PIXEL_ID = "SEU_PIXEL_ID_AQUI";
+</script>
+
+<!-- ============================================================
+     Meta Pixel Code
+     ============================================================ -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', window.FB_PIXEL_ID);
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=SEU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#17130f;
+    --ink-soft:#332c24;
+    --paper:#f3ecdd;
+    --paper-2:#ece3cf;
+    --paper-white:#fffdf7;
+    --line:#d9cbac;
+    --line-soft:#e4d9bd;
+    --muted:#71624b;
+    --stamp:#8a2318;
+    --stamp-dark:#631a11;
+    --stamp-ink:#fdf6ea;
+
+    --st-vencido-bg:#f6ddd6;
+    --st-vencido-fg:#7a2415;
+    --st-vencido-line:#a3341f;
+
+    --st-hoje-bg:#f8e1c4;
+    --st-hoje-fg:#7a4406;
+    --st-hoje-line:#c1701b;
+
+    --st-semana-bg:#f7edbd;
+    --st-semana-fg:#71590a;
+    --st-semana-line:#b9950f;
+
+    --st-ok-bg:#e0ead7;
+    --st-ok-fg:#31532b;
+    --st-ok-line:#4a7a3f;
+
+    --st-cumprido-bg:#e9e4d6;
+    --st-cumprido-fg:#6a6250;
+    --st-cumprido-line:#a89d84;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  h1,h2,h3{
+    font-family:'Fraunces',Georgia,serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  em{font-style:italic;color:var(--stamp);}
+  section{position:relative;}
+
+  /* ---------- texture: faint paper grain via layered gradients ---------- */
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(23,19,15,0.05) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+
+  /* ================= TOP NAV (site) ================= */
+  .site-nav{
+    position:sticky;top:0;z-index:50;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .site-nav .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    height:64px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Fraunces',serif;font-weight:700;font-size:16px;
+    text-decoration:none;
+  }
+  .brand .mark{
+    width:26px;height:26px;border:1.5px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    flex:none;
+  }
+  .brand span{white-space:nowrap;}
+  .nav-price{
+    display:flex;align-items:center;gap:14px;
+  }
+  .nav-price .old{
+    text-decoration:line-through;color:var(--muted);font-size:13px;display:none;
+  }
+  @media(min-width:560px){ .nav-price .old{display:inline;} }
+
+  /* ================= BUTTONS ================= */
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:15px;
+    padding:13px 22px;border-radius:2px;border:1.5px solid var(--ink);
+    cursor:pointer;text-decoration:none;white-space:nowrap;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-buy{
+    background:var(--stamp);border-color:var(--stamp);color:var(--stamp-ink);
+    box-shadow:3px 3px 0 var(--stamp-dark);
+  }
+  .btn-buy:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--stamp-dark);}
+  .btn-buy:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--stamp-dark);}
+  .btn-ghost{
+    background:transparent;color:var(--ink);
+    padding:11px 18px;font-size:14px;
+  }
+  .btn-ghost:hover{background:var(--paper-2);}
+  .btn-sm{padding:9px 16px;font-size:13px;box-shadow:2px 2px 0 var(--stamp-dark);}
+
+  /* ================= HERO ================= */
+  .hero{padding:64px 0 40px;overflow:hidden;}
+  .hero .wrap{
+    display:grid;grid-template-columns:1fr;gap:48px;align-items:start;
+  }
+  @media(min-width:960px){
+    .hero .wrap{grid-template-columns:1.05fr 0.95fr;gap:40px;}
+  }
+  .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--stamp);margin-bottom:18px;display:flex;align-items:center;gap:10px;
+  }
+  .kicker::before{content:"";width:26px;height:1px;background:var(--stamp);display:inline-block;}
+  .hero h1{
+    font-size:clamp(2.1rem, 5.4vw, 3.4rem);
+    line-height:1.06;
+    max-width:15ch;
+  }
+  .hero .lede{
+    margin-top:22px;font-size:18px;color:var(--ink-soft);max-width:46ch;
+  }
+  .hero .cta-row{
+    margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;gap:18px;
+  }
+  .price-tag{
+    display:flex;flex-direction:column;line-height:1.1;
+  }
+  .price-tag .old{
+    font-size:13px;color:var(--muted);text-decoration:line-through;
+  }
+  .price-tag .now{
+    font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;
+  }
+  .hero-note{
+    margin-top:16px;font-size:13px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;
+  }
+  .hero-note::before{content:"→";color:var(--stamp);}
+
+  /* rotated stamp badge */
+  .stamp-badge{
+    position:absolute;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    color:var(--stamp);
+    border:1.5px dashed var(--stamp);
+    border-radius:50%;
+    width:104px;height:104px;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;
+    transform:rotate(-11deg);
+    padding:10px;
+    background:rgba(255,253,247,.6);
+  }
+
+  /* ================= SHEET MOCKUP (the product itself) ================= */
+  .sheet-frame{
+    position:relative;
+    background:var(--paper-white);
+    border:1px solid var(--line);
+    box-shadow:10px 10px 0 rgba(23,19,15,.08);
+  }
+  .sheet-titlebar{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 14px;border-bottom:1px solid var(--line);
+    background:var(--paper-2);
+  }
+  .sheet-titlebar .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+  .sheet-titlebar span{
+    margin-left:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);
+  }
+  .sheet-tabs{
+    display:flex;background:#111;
+  }
+  .sheet-tabs button{
+    flex:1;background:none;border:0;color:#cfc8b8;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:11.5px;
+    letter-spacing:.06em;text-transform:uppercase;
+    padding:12px 6px;cursor:pointer;border-bottom:2px solid transparent;
+  }
+  .sheet-tabs button.active{color:#fff;background:#000;border-bottom-color:var(--stamp);}
+  .sheet-alert{
+    background:#e7c257;color:#3a2c05;font-size:12px;font-weight:600;
+    padding:8px 14px;
+  }
+  .sheet-body{padding:16px;min-height:300px;}
+  .sheet-body table{width:100%;border-collapse:collapse;font-size:11.5px;}
+  .sheet-body th{
+    text-align:left;font-family:'IBM Plex Sans',sans-serif;font-weight:600;
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;
+    color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .sheet-body td{
+    padding:7px 8px;border-bottom:1px solid var(--line-soft);white-space:nowrap;
+  }
+  .sheet-scroll{overflow-x:auto;}
+  tr.st-vencido td{background:var(--st-vencido-bg);color:var(--st-vencido-fg);}
+  tr.st-hoje td{background:var(--st-hoje-bg);color:var(--st-hoje-fg);}
+  tr.st-semana td{background:var(--st-semana-bg);color:var(--st-semana-fg);}
+  tr.st-ok td{background:var(--st-ok-bg);color:var(--st-ok-fg);}
+  tr.st-cumprido td{background:var(--st-cumprido-bg);color:var(--st-cumprido-fg);}
+  .status-pill{
+    display:inline-block;padding:2px 8px;border-radius:2px;font-weight:700;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.04em;
+    border:1px solid currentColor;
+  }
+
+  .painel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+  @media(min-width:480px){.painel-grid{grid-template-columns:repeat(4,1fr);}}
+  .painel-card{
+    border:1px solid var(--line);padding:12px 10px;background:var(--paper-white);
+  }
+  .painel-card .label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .painel-card .num{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;margin-top:4px;}
+  .painel-card.warn .num{color:var(--st-vencido-line);}
+  .painel-card.today .num{color:var(--st-hoje-line);}
+  .painel-card.week .num{color:var(--st-semana-line);}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .legend-item{
+    display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .legend-dot{width:9px;height:9px;border-radius:1px;flex:none;}
+
+  /* ================= SECTION GENERIC ================= */
+  .section{padding:76px 0;}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--stamp);margin-bottom:12px;
+  }
+  .section h2{font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1.15;}
+  .section .sub{margin-top:14px;color:var(--ink-soft);font-size:17px;max-width:56ch;}
+
+  /* ---- dor ---- */
+  .dor{background:var(--ink);color:var(--paper-white);}
+  .dor .section-head .eyebrow{color:#d6a891;}
+  .dor h2{color:#fff;}
+  .dor-list{
+    display:grid;grid-template-columns:1fr;gap:1px;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.15);
+    margin-top:8px;
+  }
+  @media(min-width:800px){.dor-list{grid-template-columns:repeat(3,1fr);}}
+  .dor-item{background:var(--ink);padding:28px 24px;}
+  .dor-item .n{
+    font-family:'IBM Plex Mono',monospace;color:#d6a891;font-size:13px;margin-bottom:14px;display:block;
+  }
+  .dor-item p{margin:0;font-size:16.5px;color:#e9e2d3;}
+  .dor-item strong{color:#fff;}
+
+  /* ---- como funciona ---- */
+  .funciona .wrap{display:grid;grid-template-columns:1fr;gap:40px;}
+  @media(min-width:980px){.funciona .wrap{grid-template-columns:0.85fr 1.15fr;align-items:start;}}
+  .rule-list{margin-top:8px;border-top:1px solid var(--line);}
+  .rule-item{
+    display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .rule-item .dot{
+    width:11px;height:11px;border-radius:1px;margin-top:6px;flex:none;
+  }
+  .rule-item h3{font-size:15.5px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;}
+  .rule-item p{margin:4px 0 0;color:var(--muted);font-size:14.5px;}
+
+  /* ---- incluso ---- */
+  .incluso-grid{
+    display:grid;grid-template-columns:1fr;gap:0;margin-top:8px;
+    border-top:1px solid var(--line);
+  }
+  @media(min-width:760px){.incluso-grid{grid-template-columns:1fr 1fr;}}
+  .incluso-item{
+    display:flex;gap:14px;padding:20px 4px;border-bottom:1px solid var(--line);
+  }
+  @media(min-width:760px){
+    .incluso-item:nth-child(odd){border-right:1px solid var(--line);padding-right:24px;}
+    .incluso-item:nth-child(even){padding-left:24px;}
+  }
+  .incluso-item .ck{
+    font-family:'IBM Plex Mono',monospace;color:var(--stamp);font-weight:700;flex:none;
+    width:20px;
+  }
+  .incluso-item h3{font-family:'IBM Plex Sans',sans-serif;font-size:15.5px;font-weight:600;}
+  .incluso-item p{margin:4px 0 0;color:var(--muted);font-size:14px;}
+
+  /* ---- para quem / nao ---- */
+  .quem-grid{display:grid;grid-template-columns:1fr;gap:2px;margin-top:8px;}
+  @media(min-width:820px){.quem-grid{grid-template-columns:1fr 1fr;}}
+  .quem-col{padding:28px;border:1px solid var(--line);}
+  .quem-col.yes{background:var(--st-ok-bg);}
+  .quem-col.no{background:var(--paper-2);}
+  .quem-col h3{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:16px;
+  }
+  .quem-col.yes h3{color:var(--st-ok-line);}
+  .quem-col.no h3{color:var(--muted);}
+  .quem-col ul{margin:0;padding:0;list-style:none;}
+  .quem-col li{
+    padding:10px 0;border-top:1px solid rgba(0,0,0,.08);font-size:15px;
+  }
+  .quem-col li:first-child{border-top:0;}
+
+  /* ---- faq ---- */
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-item button{
+    width:100%;text-align:left;background:none;border:0;cursor:pointer;
+    padding:20px 4px;display:flex;justify-content:space-between;align-items:center;gap:16px;
+    font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink);
+  }
+  .faq-item .plus{
+    font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--stamp);flex:none;
+    transition:transform .2s ease;
+  }
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-item .a{
+    max-height:0;overflow:hidden;transition:max-height .25s ease;
+  }
+  .faq-item.open .a{max-height:240px;}
+  .faq-item .a p{margin:0 0 20px;color:var(--muted);font-size:15px;max-width:64ch;}
+
+  /* ---- oferta final ---- */
+  .oferta{background:var(--ink);color:var(--paper-white);text-align:center;}
+  .oferta .wrap{max-width:720px;}
+  .oferta .eyebrow{color:#d6a891;}
+  .oferta h2{color:#fff;font-size:clamp(1.8rem,4.4vw,2.6rem);}
+  .oferta .sub{color:#cfc4ad;margin:16px auto 0;text-align:center;}
+  .oferta-price{
+    margin:36px 0 10px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .oferta-price .old{color:#a99a80;text-decoration:line-through;font-size:16px;}
+  .oferta-price .now{
+    font-family:'IBM Plex Mono',monospace;font-size:44px;font-weight:600;color:#fff;
+  }
+  .oferta-price .now span{font-size:20px;vertical-align:middle;margin-right:4px;color:#d6a891;}
+  .oferta .cdc{
+    margin-top:34px;font-size:12.5px;color:#a99a80;max-width:52ch;margin-left:auto;margin-right:auto;
+  }
+  .oferta .btn-buy{font-size:16px;padding:16px 30px;}
+
+  /* ---- footer ---- */
+  footer{padding:32px 0;border-top:1px solid var(--line);}
+  footer .wrap{
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+    font-size:12.5px;color:var(--muted);
+  }
+
+  /* fade-in on scroll */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="#topo" class="brand">
+      <span class="mark">CP</span>
+      <span>Controle de Processos e Prazos</span>
+    </a>
+    <div class="nav-price">
+      <span class="old mono" id="nav-old"></span>
+      <a href="#oferta" class="btn btn-buy btn-sm btn-buy-link">Comprar</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="topo">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Planilha para advogados</div>
+      <h1>Prazo perdido não avisa.<br>Essa planilha avisa.</h1>
+      <p class="lede">
+        Uma planilha de Excel/Google Sheets com 4 abas que calcula sozinha se um prazo
+        está <strong>OK</strong>, <strong>HOJE</strong>, <strong>ESTA SEMANA</strong> ou
+        <strong>VENCIDO</strong> — e pinta a linha inteira pra você enxergar de longe, sem precisar ler nada.
+      </p>
+      <div class="cta-row">
+        <a href="#" class="btn btn-buy btn-buy-link" id="checkout-btn">
+          Quero a planilha
+        </a>
+        <div class="price-tag">
+          <span class="old mono" id="hero-old"></span>
+          <span class="now mono" id="hero-now"></span>
+        </div>
+      </div>
+      <p class="hero-note">Pagamento único. Sem mensalidade, sem login, sem instalar nada.</p>
+    </div>
+
+    <div style="position:relative;">
+      <div class="sheet-frame reveal">
+        <div class="sheet-titlebar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span>controle-de-processos-e-prazos.xlsx</span>
+        </div>
+        <div class="sheet-tabs">
+          <button data-tab="painel" class="active">Painel</button>
+          <button data-tab="processos">Processos</button>
+          <button data-tab="prazos">Prazos</button>
+        </div>
+        <div class="sheet-alert">ATENÇÃO: estes números atualizam sozinhos conforme você preenche as outras abas.</div>
+        <div class="sheet-body">
+
+          <div class="pane" data-pane="painel">
+            <div class="painel-grid">
+              <div class="painel-card"><div class="label">Processos ativos</div><div class="num">14</div></div>
+              <div class="painel-card warn"><div class="label">Prazos vencidos</div><div class="num">1</div></div>
+              <div class="painel-card today"><div class="label">Prazos hoje</div><div class="num">2</div></div>
+              <div class="painel-card week"><div class="label">Esta semana</div><div class="num">3</div></div>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot" style="background:var(--st-vencido-line)"></span>Vencido</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--st-hoje-line)"></span>Hoje</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--st-semana-line)"></span>Esta semana</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--st-ok-line)"></span>OK</span>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="processos" hidden>
+            <div class="sheet-scroll">
+            <table>
+              <thead><tr><th>Cliente</th><th>Nº Processo</th><th>Área</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26</td><td>Cível</td><td>Ativo</td></tr>
+                <tr><td>Roberto Dias</td><td class="mono">0007781-12.2023.8.26</td><td>Trabalhista</td><td>Ativo</td></tr>
+                <tr><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26</td><td>Cível</td><td>Suspenso</td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="prazos" hidden>
+            <div class="sheet-scroll">
+            <table>
+              <thead><tr><th>Cliente</th><th>Tipo de prazo</th><th>Data</th><th>Dias</th><th>Situação</th></tr></thead>
+              <tbody>
+                <tr class="st-vencido"><td>Roberto Dias</td><td>Contestação</td><td class="mono">02/09</td><td>-6</td><td><span class="status-pill">VENCIDO</span></td></tr>
+                <tr class="st-hoje"><td>Comércio Bela Vista</td><td>Réplica</td><td class="mono">hoje</td><td>0</td><td><span class="status-pill">HOJE</span></td></tr>
+                <tr class="st-semana"><td>Marina Alvarenga</td><td>Audiência</td><td class="mono">14/09</td><td>3</td><td><span class="status-pill">ESTA SEMANA</span></td></tr>
+                <tr class="st-ok"><td>Marina Alvarenga</td><td>Recurso</td><td class="mono">30/10</td><td>34</td><td><span class="status-pill">OK</span></td></tr>
+                <tr class="st-cumprido"><td>João Petrucci</td><td>Manifestação</td><td class="mono">—</td><td>—</td><td><span class="status-pill">CUMPRIDO</span></td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="stamp-badge" style="right:-14px;bottom:-22px;">pagamento<br>único</div>
+    </div>
+  </div>
+</header>
+
+<section class="dor">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">O problema não é você</div>
+      <h2>Ninguém esquece um prazo por preguiça.<br>Esquece porque o controle falhou primeiro.</h2>
+    </div>
+    <div class="dor-list">
+      <div class="dor-item reveal">
+        <span class="n">01</span>
+        <p>Você anotou num post-it, num caderno ou no fundo do WhatsApp. O post-it caiu atrás da mesa. O caderno ficou em casa. <strong>O prazo não esperou.</strong></p>
+      </div>
+      <div class="dor-item reveal">
+        <span class="n">02</span>
+        <p>Você fez uma planilha do zero, empolgado. Três meses depois ninguém mais atualiza — <strong>porque ela não calcula nada sozinha,</strong> só ocupa espaço na área de trabalho.</p>
+      </div>
+      <div class="dor-item reveal">
+        <span class="n">03</span>
+        <p>Um cliente liga perguntando da audiência de amanhã, e você abre três abas do WhatsApp e dois e-mails <strong>só pra ter certeza da data.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="funciona section" id="como-funciona">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow reveal">Como funciona</div>
+      <h2 class="reveal">4 abas. Você preenche o branco, a planilha calcula o resto.</h2>
+      <p class="sub reveal">Clique nas abas do mockup ao lado — é a estrutura real da planilha, com dados fictícios só pra demonstração.</p>
+
+      <div class="rule-list reveal">
+        <div class="rule-item">
+          <span class="dot" style="background:var(--st-vencido-line)"></span>
+          <div><h3>VENCIDO</h3><p>A data já passou e ninguém deu baixa no prazo. Linha vermelha, impossível não ver.</p></div>
+        </div>
+        <div class="rule-item">
+          <span class="dot" style="background:var(--st-hoje-line)"></span>
+          <div><h3>HOJE</h3><p>O prazo vence hoje. Linha laranja — é o primeiro lugar que você olha de manhã.</p></div>
+        </div>
+        <div class="rule-item">
+          <span class="dot" style="background:var(--st-semana-line)"></span>
+          <div><h3>ESTA SEMANA</h3><p>Vence nos próximos 7 dias. Linha amarela — ainda dá tempo, mas já entrou no radar.</p></div>
+        </div>
+        <div class="rule-item">
+          <span class="dot" style="background:var(--st-ok-line)"></span>
+          <div><h3>OK</h3><p>Ainda tem tempo de sobra. Linha verde — você pode focar em outra coisa.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="sheet-frame">
+        <div class="sheet-titlebar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span>aba: prazos</span>
+        </div>
+        <div class="sheet-tabs">
+          <button data-tab2="processos" class="active">Processos</button>
+          <button data-tab2="prazos">Prazos</button>
+        </div>
+        <div class="sheet-alert">ATENÇÃO: escolha o processo na lista da coluna Processo, o resto preenche sozinho.</div>
+        <div class="sheet-body">
+          <div class="pane" data-pane2="processos">
+            <div class="sheet-scroll">
+            <table>
+              <thead><tr><th>Registro</th><th>Cliente</th><th>Nº Processo (CNJ)</th><th>Área</th><th>Fase</th><th>Comarca / Vara</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Marina Alvarenga</td><td class="mono">0001234-56.2024.8.26.01</td><td>Cível</td><td>Instrução</td><td>1ª Vara Cível — SP</td><td>Ativo</td></tr>
+                <tr><td>2</td><td>Roberto Dias</td><td class="mono">0007781-12.2023.8.26.03</td><td>Trabalhista</td><td>Recursal</td><td>2ª Vara do Trabalho</td><td>Ativo</td></tr>
+                <tr><td>3</td><td>Comércio Bela Vista</td><td class="mono">0003321-90.2024.8.26.02</td><td>Cível</td><td>Conhecimento</td><td>3ª Vara Cível — SP</td><td>Suspenso</td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+          <div class="pane" data-pane2="prazos" hidden>
+            <div class="sheet-scroll">
+            <table>
+              <thead><tr><th>Processo</th><th>Tipo de Prazo</th><th>Data do Prazo</th><th>Dias Restantes</th><th>Situação</th><th>Observações</th></tr></thead>
+              <tbody>
+                <tr class="st-vencido"><td>Roberto Dias — 0007781...</td><td>Contestação</td><td class="mono">02/09/2026</td><td>-6</td><td><span class="status-pill">VENCIDO</span></td><td>verificar urgente</td></tr>
+                <tr class="st-hoje"><td>Comércio Bela Vista — 0003321...</td><td>Réplica</td><td class="mono">11/09/2026</td><td>0</td><td><span class="status-pill">HOJE</span></td><td>protocolar até 19h</td></tr>
+                <tr class="st-semana"><td>Marina Alvarenga — 0001234...</td><td>Audiência</td><td class="mono">14/09/2026</td><td>3</td><td><span class="status-pill">ESTA SEMANA</span></td><td>audiência de instrução</td></tr>
+                <tr class="st-ok"><td>Marina Alvarenga — 0001234...</td><td>Recurso</td><td class="mono">30/10/2026</td><td>49</td><td><span class="status-pill">OK</span></td><td>—</td></tr>
+                <tr class="st-cumprido"><td>João Petrucci — 0009090...</td><td>Manifestação</td><td class="mono">14/10/2026</td><td>—</td><td><span class="status-pill">CUMPRIDO</span></td><td>protocolado dia 10/10</td></tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="incluso">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">O que você recebe</div>
+      <h2>Um arquivo. Quatro abas. Nada pra instalar.</h2>
+      <p class="sub">Você recebe o link de download assim que a compra é aprovada na Kiwify — um arquivo pronto pra abrir e usar no mesmo minuto.</p>
+    </div>
+    <div class="incluso-grid">
+      <div class="incluso-item reveal">
+        <span class="ck">01</span>
+        <div><h3>Aba Instruções</h3><p>Passo a passo de como preencher cada aba, direto ao ponto — sem manual de 40 páginas.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">02</span>
+        <div><h3>Aba Painel</h3><p>Contadores automáticos: processos ativos, prazos vencidos, prazos de hoje e da semana — atualiza sozinho.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">03</span>
+        <div><h3>Aba Processos</h3><p>Cadastro de clientes, nº do processo (CNJ), área, fase, comarca/vara, responsável e status.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">04</span>
+        <div><h3>Aba Prazos</h3><p>Lista suspensa liga direto ao processo cadastrado. A Situação e a cor da linha são calculadas sozinhas.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">05</span>
+        <div><h3>Fórmulas prontas</h3><p>Nada de "vou aprender a fazer PROCV". Já está tudo configurado — você só digita.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">06</span>
+        <div><h3>Excel e Google Sheets</h3><p>Funciona nos dois, sem plugin, sem macro, sem pedir permissão de administrador.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">07</span>
+        <div><h3>Sem mensalidade</h3><p>Você paga uma vez. O arquivo é seu, continua funcionando mesmo se cancelar tudo o mais.</p></div>
+      </div>
+      <div class="incluso-item reveal">
+        <span class="ck">08</span>
+        <div><h3>Sem login, sem nuvem obrigatória</h3><p>Não é SaaS. Abre localmente no Excel, ou numa cópia sua do Google Sheets.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="para-quem">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Antes de comprar</div>
+      <h2>Pra quem é — e pra quem não é</h2>
+    </div>
+    <div class="quem-grid reveal">
+      <div class="quem-col yes">
+        <h3>É pra você se</h3>
+        <ul>
+          <li>Você atua sozinho ou num escritório pequeno, sem sistema jurídico próprio</li>
+          <li>Hoje o controle de prazo vive em post-it, WhatsApp ou memória</li>
+          <li>Você já tem uma planilha, mas ela não calcula nada — só serve de lista</li>
+          <li>Você quer algo pronto pra usar hoje, sem aprender fórmula nenhuma</li>
+        </ul>
+      </div>
+      <div class="quem-col no">
+        <h3>Não é pra você se</h3>
+        <ul>
+          <li>Seu escritório já roda um sistema jurídico completo com peticionamento integrado</li>
+          <li>Você precisa de sincronização automática com o andamento processual dos tribunais</li>
+          <li>Você procura um aplicativo com login, nuvem própria e equipe de suporte 24h</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Perguntas</div>
+      <h2>Antes de perguntar por e-mail</h2>
+    </div>
+    <div class="reveal" style="max-width:760px;">
+      <div class="faq-item">
+        <button>Funciona no Google Sheets ou só no Excel?<span class="plus">+</span></button>
+        <div class="a"><p>Funciona nos dois. Você recebe o arquivo em formato compatível — pode abrir direto no Excel ou fazer o upload no Google Drive e continuar por lá.</p></div>
+      </div>
+      <div class="faq-item">
+        <button>Preciso saber Excel avançado?<span class="plus">+</span></button>
+        <div class="a"><p>Não. As fórmulas já vêm prontas nas colunas cinza. Você só preenche as células brancas — cliente, processo, data. O cálculo de situação e a cor da linha acontecem sozinhos.</p></div>
+      </div>
+      <div class="faq-item">
+        <button>Funciona no celular?<span class="plus">+</span></button>
+        <div class="a"><p>Dá pra consultar tranquilamente pelo app do Excel ou do Google Sheets no celular. Para cadastrar processos novos, recomendamos computador — é mais rápido de preencher.</p></div>
+      </div>
+      <div class="faq-item">
+        <button>É uma assinatura?<span class="plus">+</span></button>
+        <div class="a"><p>Não. Pagamento único. Sem cobrança recorrente, sem trial que vira mensalidade — o arquivo é seu.</p></div>
+      </div>
+      <div class="faq-item">
+        <button>Como recebo depois de pagar?<span class="plus">+</span></button>
+        <div class="a"><p>A Kiwify libera o link de download automaticamente após a confirmação do pagamento, e também envia por e-mail.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="oferta section" id="oferta">
+  <div class="wrap">
+    <div class="eyebrow reveal">Controle de Processos e Prazos</div>
+    <h2 class="reveal">Pare de confiar no post-it.<br>Deixe a planilha avisar por você.</h2>
+    <p class="sub reveal">4 abas prontas, fórmulas configuradas, cor automática por linha. Abre no Excel ou no Google Sheets agora mesmo.</p>
+
+    <div class="oferta-price reveal">
+      <span class="old mono" id="oferta-old"></span>
+      <span class="now mono"><span>à vista</span><span id="oferta-now"></span></span>
+    </div>
+
+    <a href="#" class="btn btn-buy btn-buy-link reveal" id="checkout-btn-final">Quero a planilha agora</a>
+
+    <p class="cdc reveal">Pagamento único, processado com segurança pela Kiwify. Como em toda compra online, você tem 7 dias de garantia por direito de arrependimento (Art. 49 do Código de Defesa do Consumidor).</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Controle de Processos e Prazos — planilha digital. Uso pessoal, não redistribuir.</span>
+    <span>Compra processada via Kiwify.</span>
+  </div>
+</footer>
+
+<script>
+  // ---- aplica variáveis definidas no <head> ----
+  document.addEventListener('DOMContentLoaded', function () {
+    var url = window.CHECKOUT_URL || '#';
+    document.querySelectorAll('.btn-buy-link').forEach(function (el) {
+      el.setAttribute('href', url);
+      el.setAttribute('target', '_blank');
+      el.setAttribute('rel', 'noopener');
+      el.addEventListener('click', function () {
+        if (typeof fbq === 'function') { fbq('track', 'InitiateCheckout'); }
+      });
+    });
+
+    var now = window.PRICE_DISPLAY || '';
+    var old = window.PRICE_OLD_DISPLAY || '';
+    ['hero-now','oferta-now'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = now;
+    });
+    ['hero-old','nav-old','oferta-old'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = old;
+    });
+
+    // ---- mockup tabs (hero) ----
+    function wireTabs(tabSelector, paneSelector, dataAttr, paneAttr){
+      var tabs = document.querySelectorAll(tabSelector);
+      tabs.forEach(function(tab){
+        tab.addEventListener('click', function(){
+          tabs.forEach(function(t){ t.classList.remove('active'); });
+          tab.classList.add('active');
+          var key = tab.getAttribute(dataAttr);
+          document.querySelectorAll(paneSelector).forEach(function(p){
+            p.hidden = p.getAttribute(paneAttr) !== key;
+          });
+        });
+      });
+    }
+    wireTabs('.sheet-tabs button[data-tab]', '.pane[data-pane]', 'data-tab', 'data-pane');
+    wireTabs('.sheet-tabs button[data-tab2]', '.pane[data-pane2]', 'data-tab2', 'data-pane2');
+
+    // ---- faq accordion ----
+    document.querySelectorAll('.faq-item button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        btn.parentElement.classList.toggle('open');
+      });
+    });
+
+    // ---- reveal on scroll ----
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  });
+</script>
+
+</body>
+</html>
