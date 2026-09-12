@@ -116,10 +116,12 @@ src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
   .section-tight{padding:40px 0;}
 
   /* ================= HERO ================= */
-  .hero{padding:56px 0 48px;}
+  .hero{padding:56px 0 52px;}
   .hero .wrap{text-align:center;max-width:720px;}
   .hero h1{font-size:clamp(1.9rem,5.4vw,2.9rem);line-height:1.1;}
   .hero .lede{margin:16px auto 0;font-size:18px;color:var(--ink-soft);max-width:44ch;}
+  .hero-shot{margin-top:36px;padding:0 16px;}
+  .hero-shot-inner{max-width:720px;margin:0 auto;}
 
   .price-anchor{margin:32px auto 0;display:flex;flex-direction:column;align-items:center;}
   .launch-badge{
@@ -267,30 +269,14 @@ src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
 <header class="hero" id="topo">
   <div class="wrap">
     <div class="eyebrow center">Planilha para advogados</div>
-    <h1>Vermelho é prazo vencido.<br>Quantos você tem agora?</h1>
-    <p class="lede">A planilha calcula sozinha — você só olha a cor.</p>
+    <h1>Um prazo perdido pode virar um processo. Contra você.</h1>
+    <p class="lede">A planilha avisa em vermelho antes que isso aconteça. Você só olha a cor.</p>
+  </div>
 
-    <div class="price-anchor">
-      <span class="launch-badge">Preço de lançamento</span>
-      <div class="price-row">
-        <span class="old-price mono" id="hero-old"></span>
-        <span class="new-price mono" id="hero-now"></span>
-      </div>
-      <span class="payment-tag">pagamento único · sem mensalidade</span>
-    </div>
-
-    <div class="cta-col">
-      <a href="#" class="pill pill-dark pill-lg btn-buy-link" id="checkout-btn">
-        Quero a planilha agora <span class="arrow">→</span>
-      </a>
-      <span class="guarantee-badge">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3z"/></svg>
-        7 dias de garantia: não gostou, devolvemos 100%
-      </span>
-      <div class="trust-row">
-        <span class="trust-item"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Compra segura</span>
-        <span class="trust-item"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 6l9 7 9-7"/></svg>Entrega imediata por e-mail</span>
-        <span class="trust-item"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h12v19l-3-1.6L12 21l-3-1.6L6 21V2z"/><path d="M8.5 7h7M8.5 11h7"/></svg>Nota fiscal automática</span>
+  <div class="hero-shot">
+    <div class="hero-shot-inner reveal">
+      <div class="shot-frame">
+        <img src="assets/prazos.png" alt="Aba Prazos da planilha, com a coluna Situação calculada automaticamente">
       </div>
     </div>
   </div>
@@ -391,7 +377,7 @@ src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
         </div>
 
         <div class="cta-col">
-          <a href="#" class="pill pill-light pill-lg btn-buy-link" id="checkout-btn-preco">
+          <a href="#" class="pill pill-light pill-lg btn-buy-link" id="checkout-btn">
             Quero a planilha <span class="arrow">→</span>
           </a>
           <span class="guarantee-badge">
@@ -503,11 +489,11 @@ src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
 
     var now = window.PRICE_DISPLAY || '';
     var old = window.PRICE_OLD_DISPLAY || '';
-    ['hero-now','price-card-now','oferta-now','sticky-now'].forEach(function(id){
+    ['price-card-now','oferta-now','sticky-now'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.textContent = now;
     });
-    ['hero-old','nav-old','price-card-old','oferta-old','sticky-old'].forEach(function(id){
+    ['nav-old','price-card-old','oferta-old','sticky-old'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.textContent = old;
     });
