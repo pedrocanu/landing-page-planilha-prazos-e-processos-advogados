@@ -68,31 +68,44 @@ git push -u origin main
 
 ## Estrutura da página
 
-Reescrita focada em conversão (redesign a partir de análise de fricções):
+Layout minimalista monocromático (fundo cinza claro, cards brancos de borda
+fina, botões pretos em pílula), no estilo de landing page de SaaS:
 
-1. **Hero**: headline testada em anúncio ("Vermelho é prazo vencido. Quantos
-   você tem agora?"), preço ancorado (de/por), selo "pagamento único", CTA,
-   selo de garantia de 7 dias e selos de confiança (compra segura, entrega
-   por e-mail, nota fiscal).
-2. **A dor**: 3 bullets curtos, sem parágrafo longo.
-3. **Demonstração 1**: seletor de abas com os 3 prints reais (Painel,
-   Processos, Prazos) + bullets resumindo as 4 abas.
-4. **Demonstração 2**: seção isolada, em destaque (fundo escuro), focada só
-   na régua de cores VENCIDO/HOJE/ESTA SEMANA/OK — o diferencial do produto.
-5. **Comparação de preço**: sistema jurídico por assinatura vs. pagamento
-   único, com checklist do que a pessoa recebe.
-6. **FAQ**: ordenada da objeção mais comum pra mais rara. A pergunta sobre
-   mensalidade não está mais aqui: virou selo de texto fixo abaixo do preço.
-7. **Oferta final**: preço ancorado + CTA + garantia.
-8. **Rodapé** + **barra fixa no rodapé da tela** (aparece ao rolar além do
-   hero, com preço e CTA sempre visíveis).
+1. **Nav** fixa no topo: logo, links de seção e botão preto "Comprar".
+2. **Hero**: título grande centralizado, subtítulo, dois CTAs (compra e "ver
+   por dentro") e o print da aba Prazos numa moldura com fundo pontilhado.
+3. **Visão geral**: grid de 6 cards (Processos, Prazos, Painel, Cor
+   automática, Instruções, Excel e Sheets). Cada card tem texto à esquerda e
+   um mini mockup em HTML à direita — nenhum é imagem.
+4. **Três seções alternadas** (texto + painel de mockup): Prazos (a régua
+   VENCIDO/HOJE/ESTA SEMANA/OK), Processos (fase de cada caso) e Painel
+   (contadores do dia).
+5. **Dentro da planilha**: bento com os 3 prints reais de [assets/](assets/).
+6. **4 abas. Um arquivo só.**: 4 cards com checklist do que cada aba faz.
+7. **Preço**: card central com preço ancorado, CTA preto e 4 selos, seguido
+   do card de garantia de 7 dias.
+8. **FAQ**: acordeão de linhas finas, com a primeira pergunta já aberta.
+9. **CTA final** + **rodapé** em 4 colunas + **barra fixa** no rodapé da tela
+   (aparece ao rolar além do hero, com preço e CTA sempre visíveis).
 
 Sem nenhuma seção de depoimento, review ou citação de cliente, por decisão
 deliberada.
 
 ## Decisões de design
 
-Identidade visual preto/branco/cinza com amarelo (`#f6c445`) como cor de
-alerta e destaque, a mesma lógica de cores da própria planilha (navbar preta,
-banner de atenção amarelo). A prova visual do produto são os 3 prints reais em
-[assets/](assets/) — não mockups recriados.
+Paleta monocromática: fundo `#f4f4f4`, superfícies brancas, linhas `#e7e7e7`,
+preto `#0b0b0b` nos títulos e nos botões. Tipografia Inter com tracking
+negativo (`-0.035em`) nos títulos. Cor só aparece dentro dos mockups, nas
+situações de prazo (`--st-vencido`, `--st-hoje`, `--st-semana`, `--st-ok`),
+que são as mesmas cores da planilha.
+
+Os mockups das seções são HTML/CSS, não imagens — carregam junto com a página
+e continuam nítidos em qualquer tela. A prova visual do produto continua sendo
+os 3 prints reais em [assets/](assets/), agrupados na seção "Dentro da
+planilha".
+
+## Deploy
+
+A página está publicada na Vercel, ligada a este repositório:
+<https://landingpageplanilhaprazoseprocessos.vercel.app/>. Todo push na branch
+`main` republica o site automaticamente.
