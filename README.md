@@ -109,3 +109,39 @@ planilha".
 A página está publicada na Vercel, ligada a este repositório:
 <https://landingpageplanilhaprazoseprocessos.vercel.app/>. Todo push na branch
 `main` republica o site automaticamente.
+
+## Meta Pixel e Conversions API
+
+A página manda cada evento por dois caminhos, com o **mesmo `event_id`**, para
+o Meta deduplicar e contar uma conversão só:
+
+- **Navegador**: o pixel `1048049571165967` (bloco `<!-- Meta Pixel Code -->`
+  no `<head>`), via `fbq('track', nome, dados, { eventID })`.
+- **Servidor**: [api/capi.js](api/capi.js), uma função serverless da Vercel que
+  recebe `POST /api/capi` e repassa o evento para a Conversions API, junto com
+  o IP, o user-agent e os cookies `_fbp` / `_fbc` do visitante — dados que o
+  bloqueador de anúncios do navegador costuma derrubar.
+
+Eventos enviados hoje: `PageView` no carregamento e `InitiateCheckout` no
+clique de qualquer botão de compra (com `value`, `currency` e `content_name`).
+Só os eventos da lista `ALLOWED_EVENTS` são aceitos, porque o endpoint é
+público.
+
+### O token NÃO fica no repositório
+
+O token de acesso da CAPI é uma credencial: quem tem ele manda eventos em nome
+da sua conta. Ele fica só na variável de ambiente **`FB_CAPI_TOKEN`**, no
+painel da Vercel:
+
+1. Vercel → o projeto → **Settings → Environment Variables**
+2. Name: `FB_CAPI_TOKEN`, Value: o token gerado no Gerenciador de Eventos
+3. Marque os três ambientes (Production, Preview, Development) e salve
+4. **Redeploy** (Deployments → o último → `...` → Redeploy): variável nova só
+   vale para deploys feitos depois dela
+
+Sem a variável configurada, `/api/capi` responde `204` e não envia nada — a
+página continua funcionando normalmente, só com o pixel do navegador.
+
+Para testar no **Testar eventos** do Gerenciador de Eventos, crie também a
+variável `FB_CAPI_TEST_CODE` com o código `TEST#####` que aparece lá, e
+apague-a depois.

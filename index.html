@@ -13,6 +13,7 @@
   window.CHECKOUT_URL = "https://pay.kiwify.com.br/Uxjv9X5";
   window.PRICE_DISPLAY = "R$ 29,90";
   window.PRICE_OLD_DISPLAY = "R$ 39,90";
+  window.PRICE_VALUE = 29.90; // mesmo preço, em número, para o valor da conversão
 </script>
 
 <!-- Meta Pixel Code -->
@@ -26,12 +27,46 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1048049571165967');
-fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+
+<!-- ============================================================
+     Eventos: navegador (fbq) + servidor (Conversions API).
+     Os dois mandam o MESMO event_id, então o Meta deduplica e
+     conta uma conversão só. O token da CAPI fica na variável de
+     ambiente FB_CAPI_TOKEN, no painel da Vercel — nunca aqui.
+     ============================================================ -->
+<script>
+(function () {
+  function newId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return 'e' + Date.now() + '-' + Math.random().toString(16).slice(2);
+  }
+  window.trackEvent = function (name, customData) {
+    var id = newId();
+    if (typeof fbq === 'function') {
+      fbq('track', name, customData || {}, { eventID: id });
+    }
+    try {
+      fetch('/api/capi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          event_name: name,
+          event_id: id,
+          event_source_url: location.href,
+          custom_data: customData || {}
+        })
+      }).catch(function () {});
+    } catch (e) {}
+  };
+  window.trackEvent('PageView');
+})();
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -715,7 +750,15 @@ src="https://www.facebook.com/tr?id=1048049571165967&ev=PageView&noscript=1"
       el.setAttribute('target', '_blank');
       el.setAttribute('rel', 'noopener');
       el.addEventListener('click', function () {
-        if (typeof fbq === 'function') { fbq('track', 'InitiateCheckout'); }
+        if (typeof window.trackEvent === 'function') {
+          window.trackEvent('InitiateCheckout', {
+            value: window.PRICE_VALUE,
+            currency: 'BRL',
+            content_name: 'Controle de Processos e Prazos'
+          });
+        } else if (typeof fbq === 'function') {
+          fbq('track', 'InitiateCheckout');
+        }
       });
     });
 
